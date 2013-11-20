@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>归档：2013/11 | HellGame</title>
+  <title>Cocos2d 内存 | HellGame</title>
   <meta name="author" content="HellGame">
   
   <meta name="description" content="HellGame">
@@ -44,7 +44,7 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
-<h2 class="archive-title">2013/11</h2>
+<h2 class="archive-title tag">Cocos2d 内存</h2>
 
 
   
@@ -66,39 +66,6 @@
       
         <p>转自：<a href="http://labs.easymobi.cn/?p=3807" target="_blank">http://labs.easymobi.cn/?p=3807</a></p>
 <p>关于cocos2d程序开发内存管理的血泪总结–如何最优的使用内存<br>发表于 2012/12/14 由 sunweidong022<br>最近开发黑道快打，在iPod上测试一个劲的闪退，想尽了各种办法,从周一忙活到了现在，终于算是基本解决了。主要问题出在内存过高，系统报警然后莫名的crash。在这里给大家说一下这几天的经验..大家仔细瞧瞧。希望能帮到大家与大家共勉。<br>首先一台设备的内存是固定的。这些内存被系统占了一部分，当当前App占用的内存过高时，会收到系统发来的低内存告警，会释放缓存当中没有被利用到的资源。但是如果还是不够的话，App就会死掉。<br>让我们看一下当下设备可使用的内存大小<br>iPad2/iPhone4s/iphone4 170-180mb<br>iPad/iPod touch3,4/iphone3gs 40-80mb<br>iPod touch1,2/iPhone3g/iPhone1 25mb<br>在一个程序中，占用内存最多的是纹理贴图。程序在使用它时，并不像我们想想的那样跟图片的大小有关，其实是完全无关的，这个地方有这样几个误区。<br>1、图片越小，占用内存越小。<br>opengl在使用贴图时，贴图占用内存的大小只与它的图片尺寸有关，与图片本身的大小毫无关系,而且加载的时候只会作为2的n次方大小的图片去加载。也就是说一张1025<em>1025的图片与一张2048</em>2048的贴图在使用时,内存是一样的。那么这个内存是多少呢，32位的图片是图片尺寸寛<em>高</em>4，16位的是<em>2。也就是说一张2048</em>2048的图片在内存中占16M内存。像touch4这样的设备，5张图片,就结束了。<br>2、图片格式不同，占用内存大小不同<br>通常我们以为jpg格式的图片,比png格式的图片在使用中用更少的内存，或者是RPGA4444格式的比RPGA8888格式的使用更少的内存。其实不然，因为cocos2d的默认加载图片的方式是RPGA8888，也就是[CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];所以他们使用的内存大小是一样的。而且不仅这样，在加载图片的时候，加载png图片所使用的内存是png图片占内存的两倍。也就是说在加载一张2048<em>2048的贴图时，峰值达到32M，而jpg图片由于要转换成png，致使它需要48M的内存。虽然最后都占用16M内存，但是峰值太高就会导致App crash。<br>看完了上面的，那么在开发过程中，我们到底应该怎么做，总结了一下几点,可以大大降低程序crash的几率：<br>1、对小图片进行整合<br>通过texturePacker将多张要使用到的小图片整合成一张大图片，避免不必要的资源浪费。<br>2、对图片进行压缩<br>cocos2d本身支持一种pvr.ccz格式的图片。通过texturePacker可以的得到。这种图片在使用时全部都是优点，首先加载速度快，在加载的时候只使用到一倍的图片内存加一点点另外的内存。此外pvr.ccz还有一些别的压缩格式。例如PVRCT4和PVRCT2，这两种格式是有损图片质量的压缩，但是可以变得很小。比如说原来的1024</em>1024的图片应该占4M内存。用了PVRCT4就只占512K的内存了。整整减少了1/8,但是这是减少了质量的，也就是说可以用到一些不明显的,小的地方。<br>3、更改加载纹理的格式<br>cocos2d默认加载图片格式是[CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];是32位，当有些图片比如说背景，我们在使用它的时候不需要这么高的质量。可以更改为[CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA4444]; 16位，这样使用的内存就减少了一半。<br>4、及时查看及清理缓存<br>cococs2d开发过程中，需要我们及时来清理缓存。这样才不会在加载另一个场景的时候出现峰值太高，直接crash的情况。选择合适的时机来清理缓存或者使用中间界面来清理缓存在有些时候都是必须需的。<br>[[CCSpriteFrameCache sharedSpriteFrameCache]removeUnusedSpriteFrames];<br>[[CCTextureCache sharedTextureCache]removeUnusedTextures];<br>另外我们可以使用<br>[[CCTextureCache sharedTextureCache] dumpCachedTextureInfo];<br>来查看当前缓存中的图片信息</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-18T15:43:08.000Z"><a href="/2013/11/18/hello-world/">11月 18 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/18/hello-world/">Hello World</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Welcome to <a href="http://zespia.tw/hexo" target="_blank">Hexo</a>! This is your very first post. Check <a href="http://zespia.tw/hexo/docs" target="_blank">documentation</a> to learn how to use.</p>
-<p>话说之前用weebly，感觉是不错，但就是速度有点慢，经常要等好久才能打开。无意中在这里<a href="http://blog.justbilt.com/869/" target="_blank">http://blog.justbilt.com/869/</a> 看到了作者用github.io来建博客，觉得很有意思，github我之前也一直在使用，但没想到原来还可以这样用！于是折腾了一晚上搞定了哈哈。之前什么都不懂，域名是在新网上注册的，但新网的网站感觉好古老，看了这篇文章<a href="http://zipperary.com/2013/05/27/domain-name-and-dns/" target="_blank">http://zipperary.com/2013/05/27/domain-name-and-dns/</a> 后，我把dns服务商改成了dnspod，感觉还不错，一改就生效了，比新网快！明年再把域名服务商该为Goddady好了！</p>
 
       
     </div>
